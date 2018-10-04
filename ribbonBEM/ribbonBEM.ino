@@ -101,76 +101,535 @@ void loop() {
 
   switch (mode) {
     case 1: clean(); break;
-    case 2: strobSpread();    break;
-    case 3: strob();    break;
-    case 4: vroum();    break;
-    case 5: vroumContr();    break;
-    case 6: questionReponse(); break;
-    case 7: strobAlt(); break;
-    case 8: fromCenterSetup(); break;
-    case 9: fromCenter(); break;
-    case 10: rainbow(1000); break;
+    case 2: ambiance();    break;
+    case 3: ambianceWhite();    break;
+    case 4: strobSpread2();    break;
+    case 5: strob2();    break;
+    case 6: questionReponse(50); break;
+    case 7: 
+    case 8: 
+    case 9: 
+    case 10: 
     case 11: rain2(); break;
-    case 12: circle(); break;
-    case 13: wave1();  break;
-    case 14: wave2();  break;
-    case 15: waveLightClean();  break;
+    case 12: circle(50); break;
+    case 13: wave1(50);  break;
+    case 14: wave2(50);  break;
+    case 15: waveLightClean(50);  break;
     case 16: rain();  break; //fait planter après ? je vais faire un code sans loop
   }
-//  clean();
-//  strobAlt();
-//  fromCenterSetup();
-//  fromCenter();
-//  colorFill(uint32_t c, uint8_t wait);
-//  colorWipe(uint32_t c, uint8_t wait);
-//  rainbow(uint8_t wait);
-//  rainbowCycle(uint8_t wait);
-//  theaterChase(uint32_t c, uint8_t wait);
-//  theaterChaseRainbow(uint8_t wait);
-//  Wheel(byte WheelPos);
 }
 
-// My behaviors
+
+
+/+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++/
+
+/********************************************************/
+/****************Comportements BEM***********************/
+/********************************************************/
+
+//le code ci dessous est divisié de la manière suivante:
+//- fonctions principales, appelées dans le switch case
+//- fonctions auxiliaires, appelées dans les fonctions principales
+//- fonctions déjà existantes, pour référence
+
+
+/****************FONCTIONS PRINCIPALES***********************/
+
 void clean() {
-  for (uint16_t i = 0; i < N; i++) {
+  for (uint16_t i = 0; i < 12*N; i++) {
     strip.setPixelColor(i, strip.Color(0, 0, 0));
   }
   strip.show();
 }
 
 void ambiance() {
-
   k++;
-
   if (k > KK) {
     rr = random(255);
     bb = random(255);
     k = 0;
   }
-
   for (uint16_t i = 0; i < N; i++) {
     strip.setPixelColor(i, strip.Color(0.7 * rr * (1 - cos(k * 2 * M_PI / KK)), 0.5 * bb * (1 - cos(k * 2 * M_PI / KK)), 0) );
   }
-
   strip.show();
   delay(5);
+}
 
+void ambianceWhite() {
+  k++;
+  if (k > KK) {
+    rr = 100;
+    bb = 100;
+    k = 100;
+  }
+  for (uint16_t i = 0; i < N; i++) {
+    strip.setPixelColor(i, strip.Color(0.7 * rr * (1 - cos(k * 2 * M_PI / KK)), 0.5 * bb * (1 - cos(k * 2 * M_PI / KK)), 0.3 * k * (1 - cos(k * 2 * M_PI / KK))));
+  }
+  strip.show();
+  delay(5);
+}
+
+void strobSpread2() {
+  for (int i = 0; i < 13; i++){
+    strip.setPixelColor(0+i*N, strip.Color(255, 255, 255));
+    strip.setPixelColor(1+i*N, strip.Color(255, 255, 255));
+    strip.setPixelColor(2+i*N, strip.Color(255, 255, 255));
+    strip.setPixelColor(i*N - 3, strip.Color(0, 0, 0));
+    strip.setPixelColor(i*N - 2, strip.Color(0, 0, 0));
+    strip.setPixelColor(i*N - 1, strip.Color(0, 0, 0));
+    strip.show();
+  }
+  delay(10);
+  for (int i = 0; i < 13; i++){
+    strip.setPixelColor(0+i*N, strip.Color(0, 0, 0));
+    strip.setPixelColor(1+i*N, strip.Color(0, 0, 0));
+    strip.setPixelColor(2+i*N, strip.Color(0, 0, 0));
+    strip.setPixelColor(i*N - 3, strip.Color(255, 255, 255));
+    strip.setPixelColor(i*N - 2, strip.Color(255, 255, 255));
+    strip.setPixelColor(i*N - 1, strip.Color(255, 255, 255));
+    strip.show(); 
+  }
+  delay(10);
+}
+
+void strob2() {
+  for (uint16_t i = 0; i < 12*N; i++) {
+    strip.setPixelColor(i, strip.Color(100, 100, 100));
+  }
+  strip.show();
+  delay(20);
+  
+  for (uint16_t i = 0; i < 12*N; i++) {
+    strip.setPixelColor(i, strip.Color(0, 0, 0));
+  }
+  strip.show();
+  delay(80);
 }
 
 
+void wave1(int milis){
+
+  //chaque PILLIER s'allume s'éteint successivement de derriere vers  devant
+  eteindre_cinq_a();
+  eteindre_cinq_b();
+  eteindre_six_a();
+  eteindre_six_b();
+  un_a();            
+  un_b();
+  deux_a();
+  deux_b();
+  delay(milis);
+  eteindre_un_a();            
+  eteindre_un_b();
+  eteindre_deux_a();
+  eteindre_deux_b();
+  trois_a();
+  trois_b();
+  quattre_a();
+  quattre_b();
+  delay(milis);
+  eteindre_trois_a();
+  eteindre_trois_b();
+  eteindre_quattre_a();
+  eteindre_quattre_b();
+  cinq_a();
+  cinq_b();
+  six_a();
+  six_b();
+  delay(milis);
+  clean();
+}
+
+
+void wave2(int milis){
+
+  //chaque ARRETE s'allume s'éteint successivement de derriere vers  devant
+  un_a();            
+  un_b();
+  delay(milis);
+  clean();
+  deux_a();
+  deux_b();
+  delay(milis);
+  clean();
+  trois_a();
+  trois_b();
+  delay(milis);
+  clean();
+  quattre_a();
+  quattre_b();
+  delay(milis);
+  cinq_a();
+  cinq_b();
+  delay(milis);
+  clean();
+  six_a();
+  six_b();
+  delay(milis);
+}
+
+void waveLightClean(int milis){
+  //chaque arrete s'allume successivement de derriere vers devant et s'éteint successivement
+  un_a();            
+  un_b();
+  delay(milis);
+  deux_a();
+  deux_b();
+  delay(milis);
+  trois_a();
+  trois_b();
+  delay(milis);
+  quattre_a();
+  quattre_b();
+  delay(milis);
+  cinq_a();
+  cinq_b();
+  delay(milis);
+  six_a();
+  six_b();
+  delay(milis);
+  eteindre_un_a();            
+  eteindre_un_b();
+  delay(milis);
+  eteindre_deux_a();
+  eteindre_deux_b();
+  delay(milis);
+  eteindre_trois_a();
+  eteindre_trois_b();
+  delay(milis);
+  eteindre_quattre_a();
+  eteindre_quattre_b();
+  delay(milis);
+  eteindre_cinq_a();
+  eteindre_cinq_b();
+  delay(milis);
+  eteindre_six_a();
+  eteindre_six_b();
+  delay(milis);
+}
+
+void questionReponse(int milis){
+
+  //pilier fond gauche s'allume et s'eteind, pilier fond droite répond droite répond 0.05s plus tard
+  un_a();            
+  deux_a();
+  delay(milis);
+  clean();
+  un_b();
+  deux_b();
+  delay(milis);
+  clean();
+  delay(milis);
+
+  //pilier milieu gauche s'allume et s'eteind, pilier milieu droite répond droite répond 0.05s plus tard
+  trois_a();
+  quattre_a();
+  delay(milis);
+  clean();
+  trois_b();
+  quattre_b();
+  delay(milis);
+  clean();
+  delay(milis);
+
+  //pilier devant gauche s'allume et s'eteind, pilier devant droite répond droite répond 0.05s plus tard
+  cinq_a();
+  six_a();
+  delay(milis);
+  clean();
+  cinq_b();
+  six_b();
+  delay(milis);
+  clean();
+  delay(milis);
+}
+
+void circle(int milis){
+  un_a();
+  delay(milis);
+  clean();          
+  deux_a();
+  delay(milis);
+  clean();
+  trois_a();
+  delay(milis);
+  clean();
+  quattre_a();
+  delay(milis);
+  clean();
+  cinq_a();
+  delay(milis);
+  clean();
+  six_a();
+  delay(milis);
+  eteindre_six_a();
+  six_b();
+  delay(milis);
+  eteindre_six_b();
+  cinq_b();
+  delay(milis);
+  clean();
+  quattre_b();
+  delay(milis);
+  clean();
+  trois_b();
+  delay(milis);
+  clean();
+  deux_b();
+  delay(milis);
+  clean();
+  un_b();
+  delay(milis);
+  clean();
+}
+
+
+void rain(){
+  for(uint16_t i = 0;i<7*N;i++){
+    if (i%N == 0){
+      rainWipe(i, N);
+      rainWipe(i+(6*N), N+(6*N));
+      delay(1000);
+    }
+  }
+  strip.show();
+}
+
+void rain2(){
+  for(int i=0;i<7;i++){
+    rainWipeGauche(i);
+    rainWipeDroite(i);
+    delay(1000);
+  }
+}
+
+
+
+/*******************************************************/
+/********II FONCTIONS AUXILIAIRES***********************/
+/*******************************************************/
+//a) allumer
+//b) eteindre
+//c) rain
+
+/**********allumer*************/
+/******** coté A*********/
+void un_a() {
+  for (uint16_t i = 0; i < N; i++) {
+    strip.setPixelColor(i, strip.Color(100,255,100));
+  }
+  strip.show();
+}
+
+void deux_a() {
+  for (uint16_t i = N; i < 2*N; i++) {
+    strip.setPixelColor(i, strip.Color(100,255,100));
+  }
+  strip.show();
+}
+
+void trois_a() {
+  for (uint16_t i = 2*N; i < 3*N; i++) {
+    strip.setPixelColor(i, strip.Color(100,255,100));
+  }
+  strip.show();
+}
+
+void quattre_a() {
+  for (uint16_t i = 3*N; i < 4*N; i++) {
+    strip.setPixelColor(i, strip.Color(100,255,100));
+  }
+  strip.show();
+}
+
+void cinq_a() {
+  for (uint16_t i = 4*N; i < 5*N; i++) {
+    strip.setPixelColor(i, strip.Color(100,255,100));
+  }
+  strip.show();
+}
+
+void six_a() {
+  for (uint16_t i = 5*N; i < 6*N; i++) {
+    strip.setPixelColor(i, strip.Color(100,255,100));
+  }
+  strip.show();
+}
+
+/******** coté B*********/
+void un_b() {
+  for (uint16_t i = 6*N; i < 7*N; i++) {
+    strip.setPixelColor(i, strip.Color(100,255,100));
+  }
+  strip.show();
+}
+
+void deux_b() {
+  for (uint16_t i = 7*N; i < 8*N; i++) {
+    strip.setPixelColor(i, strip.Color(100,255,100));
+  }
+  strip.show();
+}
+
+void trois_b() {
+  for (uint16_t i = 8*N; i < 9*N; i++) {
+    strip.setPixelColor(i, strip.Color(100,255,100));
+  }
+  strip.show();
+}
+
+void quattre_b() {
+  for (uint16_t i = 9*N; i < 10*N; i++) {
+    strip.setPixelColor(i, strip.Color(100,255,100));
+  }
+  strip.show();
+}
+
+void cinq_b() {
+  for (uint16_t i = 10*N; i < 11*N; i++) {
+    strip.setPixelColor(i, strip.Color(100,255,100));
+  }
+  strip.show();
+}
+
+void six_b() {
+  for (uint16_t i = 11*N; i < 12*N; i++) {
+    strip.setPixelColor(i, strip.Color(100,255,100));
+  }
+  strip.show();
+}
+
+/************2) Stop****************/
+/************Cote A***************/
+
+void eteindre_un_a() {
+  for (uint16_t i = 0; i < N; i++) {
+    strip.setPixelColor(i, strip.Color(0,0,0));
+  }
+  strip.show();
+}
+
+void eteindre_deux_a() {
+  for (uint16_t i = N; i < 2*N; i++) {
+    strip.setPixelColor(i, strip.Color(0,0,0));
+  }
+  strip.show();
+}
+
+void eteindre_trois_a() {
+  for (uint16_t i = 2*N; i < 3*N; i++) {
+    strip.setPixelColor(i, strip.Color(0,0,0));
+  }
+  strip.show();
+}
+
+void eteindre_quattre_a() {
+  for (uint16_t i = 3*N; i < 4*N; i++) {
+    strip.setPixelColor(i, strip.Color(0,0,0));
+  }
+  strip.show();
+}
+
+void eteindre_cinq_a() {
+  for (uint16_t i = 4*N; i < 5*N; i++) {
+    strip.setPixelColor(i, strip.Color(0,0,0));
+  }
+  strip.show();
+}
+
+void eteindre_six_a() {
+  for (uint16_t i = 5*N; i < 6*N; i++) {
+    strip.setPixelColor(i, strip.Color(0,0,0));
+  }
+  strip.show();
+}
+
+/******** coté B*********/
+void eteindre_un_b() {
+  for (uint16_t i = 6*N; i < 7*N; i++) {
+    strip.setPixelColor(i, strip.Color(0,0,0));
+  }
+  strip.show();
+}
+
+void eteindre_deux_b() {
+  for (uint16_t i = 7*N; i < 8*N; i++) {
+    strip.setPixelColor(i, strip.Color(0,0,0));
+  }
+  strip.show();
+}
+
+void eteindre_trois_b() {
+  for (uint16_t i = 8*N; i < 9*N; i++) {
+    strip.setPixelColor(i, strip.Color(0,0,0));
+  }
+  strip.show();
+}
+
+void eteindre_quattre_b() {
+  for (uint16_t i = 9*N; i < 10*N; i++) {
+    strip.setPixelColor(i, strip.Color(0,0,0));
+  }
+  strip.show();
+}
+
+void eteindre_cinq_b() {
+  for (uint16_t i = 10*N; i < 11*N; i++) {
+    strip.setPixelColor(i, strip.Color(0,0,0));
+  }
+  strip.show();
+}
+
+void eteindre_six_b() {
+  for (uint16_t i = 11*N; i < 12*N; i++) {
+    strip.setPixelColor(i, strip.Color(0,0,0));
+  }
+  strip.show();
+}
+
+/*************c) Rain**************/
+void rainWipeGauche(int i) {
+  for (uint16_t j = i*N; j < (i+1)*N; j++) {
+    strip.setPixelColor(j, strip.Color(100,100,100));
+    strip.show();
+    delay(50);
+  }
+}
+
+void rainWipeDroite(int i) {
+  for (uint16_t j = 6*N+(2*i)*N; j < (2*i+1)*N; j++) {
+    strip.setPixelColor(j, strip.Color(100,100,100));
+    strip.show();
+    delay(50);
+  }
+}
+
+void rainWipe(uint16_t i, uint16_t N) {
+  for (i; i < i+N; i++) {
+    strip.setPixelColor(i, strip.Color(100,100,100));
+    strip.show();
+    delay(50);
+  }
+}
+
+
+
+/*******************************************************/
+/********II FONCTIONS DEJA EXISTANTES********************/
+/*******************************************************/
+
+// My behaviors
+
 void vroum() {
-
-
   strip.setPixelColor((N + pos - 1) % N, strip.Color(0, 0, 0));
   strip.setPixelColor((N + pos    ) % N, strip.Color(0, 0, 0));
   strip.setPixelColor((N + pos + 1) % N, strip.Color(0, 0, 0));
 
   pos = (pos + diffPos);
-
   //  if(pos > N-3) {
   //    diffPos = -1;
   //  }
-
   if (pos > N)
     pos = pos - N;
 
@@ -180,14 +639,8 @@ void vroum() {
   strip.setPixelColor((N + pos - 1) % N, strip.Color(255, 0, 0));
   strip.setPixelColor((N + pos  ) % N, strip.Color(255, 0, 0));
   strip.setPixelColor((N + pos + 1) % N, strip.Color(255, 0, 0));
-
-
   strip.show();
   delay(7);
-
-
-
-
   strip.setPixelColor(pos - 1, strip.Color(0, 0, 0));
   strip.setPixelColor(pos    , strip.Color(0, 0, 0));
   strip.setPixelColor(pos + 1, strip.Color(0, 0, 0));
@@ -200,9 +653,7 @@ void vroum() {
   strip.setPixelColor(pos - 1, strip.Color(255, 0, 0));
   strip.setPixelColor(pos    , strip.Color(255, 0, 0));
   strip.setPixelColor(pos + 1, strip.Color(255, 0, 0));
-
   strip.show();
-
  // delay(1);
 }
 
@@ -505,419 +956,6 @@ void push16() {
 
 
 
-
-
-
-
-
-/****************Comportements BEM***********************/
-
-/******** coté A*********/
-void un_a() {
-  for (uint16_t i = 0; i < N; i++) {
-    strip.setPixelColor(i, strip.Color(100,255,100));
-  }
-  strip.show();
-}
-
-void deux_a() {
-  for (uint16_t i = N; i < 2*N; i++) {
-    strip.setPixelColor(i, strip.Color(100,255,100));
-  }
-  strip.show();
-}
-
-void trois_a() {
-  for (uint16_t i = 2*N; i < 3*N; i++) {
-    strip.setPixelColor(i, strip.Color(100,255,100));
-  }
-  strip.show();
-}
-
-void quattre_a() {
-  for (uint16_t i = 3*N; i < 4*N; i++) {
-    strip.setPixelColor(i, strip.Color(100,255,100));
-  }
-  strip.show();
-}
-
-void cinq_a() {
-  for (uint16_t i = 4*N; i < 5*N; i++) {
-    strip.setPixelColor(i, strip.Color(100,255,100));
-  }
-  strip.show();
-}
-
-void six_a() {
-  for (uint16_t i = 5*N; i < 6*N; i++) {
-    strip.setPixelColor(i, strip.Color(100,255,100));
-  }
-  strip.show();
-}
-
-/******** coté B*********/
-void un_b() {
-  for (uint16_t i = 6*N; i < 7*N; i++) {
-    strip.setPixelColor(i, strip.Color(100,255,100));
-  }
-  strip.show();
-}
-
-void deux_b() {
-  for (uint16_t i = 7*N; i < 8*N; i++) {
-    strip.setPixelColor(i, strip.Color(100,255,100));
-  }
-  strip.show();
-}
-
-void trois_b() {
-  for (uint16_t i = 8*N; i < 9*N; i++) {
-    strip.setPixelColor(i, strip.Color(100,255,100));
-  }
-  strip.show();
-}
-
-void quattre_b() {
-  for (uint16_t i = 9*N; i < 10*N; i++) {
-    strip.setPixelColor(i, strip.Color(100,255,100));
-  }
-  strip.show();
-}
-
-void cinq_b() {
-  for (uint16_t i = 10*N; i < 11*N; i++) {
-    strip.setPixelColor(i, strip.Color(100,255,100));
-  }
-  strip.show();
-}
-
-void six_b() {
-  for (uint16_t i = 11*N; i < 12*N; i++) {
-    strip.setPixelColor(i, strip.Color(100,255,100));
-  }
-  strip.show();
-}
-
-
-/*************Stop****************/
-void stripStop() {
-  strip.show();
-  delay(5);
-}
-
-void eteindre_un_a() {
-  for (uint16_t i = 0; i < N; i++) {
-    strip.setPixelColor(i, strip.Color(0,0,0));
-  }
-  strip.show();
-}
-
-void eteindre_deux_a() {
-  for (uint16_t i = N; i < 2*N; i++) {
-    strip.setPixelColor(i, strip.Color(0,0,0));
-  }
-  strip.show();
-}
-
-void eteindre_trois_a() {
-  for (uint16_t i = 2*N; i < 3*N; i++) {
-    strip.setPixelColor(i, strip.Color(0,0,0));
-  }
-  strip.show();
-}
-
-void eteindre_quattre_a() {
-  for (uint16_t i = 3*N; i < 4*N; i++) {
-    strip.setPixelColor(i, strip.Color(0,0,0));
-  }
-  strip.show();
-}
-
-void eteindre_cinq_a() {
-  for (uint16_t i = 4*N; i < 5*N; i++) {
-    strip.setPixelColor(i, strip.Color(0,0,0));
-  }
-  strip.show();
-}
-
-void eteindre_six_a() {
-  for (uint16_t i = 5*N; i < 6*N; i++) {
-    strip.setPixelColor(i, strip.Color(0,0,0));
-  }
-  strip.show();
-}
-
-/******** coté B*********/
-void eteindre_un_b() {
-  for (uint16_t i = 6*N; i < 7*N; i++) {
-    strip.setPixelColor(i, strip.Color(0,0,0));
-  }
-  strip.show();
-}
-
-void eteindre_deux_b() {
-  for (uint16_t i = 7*N; i < 8*N; i++) {
-    strip.setPixelColor(i, strip.Color(0,0,0));
-  }
-  strip.show();
-}
-
-void eteindre_trois_b() {
-  for (uint16_t i = 8*N; i < 9*N; i++) {
-    strip.setPixelColor(i, strip.Color(0,0,0));
-  }
-  strip.show();
-}
-
-void eteindre_quattre_b() {
-  for (uint16_t i = 9*N; i < 10*N; i++) {
-    strip.setPixelColor(i, strip.Color(0,0,0));
-  }
-  strip.show();
-}
-
-void eteindre_cinq_b() {
-  for (uint16_t i = 10*N; i < 11*N; i++) {
-    strip.setPixelColor(i, strip.Color(0,0,0));
-  }
-  strip.show();
-}
-
-void eteindre_six_b() {
-  for (uint16_t i = 11*N; i < 12*N; i++) {
-    strip.setPixelColor(i, strip.Color(0,0,0));
-  }
-  strip.show();
-}
-
-void wave1(){
-
-  //chaque PILLIER s'allume s'éteint successivement de derriere vers  devant
-  eteindre_cinq_a();
-  eteindre_cinq_b();
-  eteindre_six_a();
-  eteindre_six_b();
-  un_a();            
-  un_b();
-  deux_a();
-  deux_b();
-  delay(50);
-  eteindre_un_a();            
-  eteindre_un_b();
-  eteindre_deux_a();
-  eteindre_deux_b();
-  trois_a();
-  trois_b();
-  quattre_a();
-  quattre_b();
-  delay(50);
-  eteindre_trois_a();
-  eteindre_trois_b();
-  eteindre_quattre_a();
-  eteindre_quattre_b();
-  cinq_a();
-  cinq_b();
-  six_a();
-  six_b();
-  delay(50);
-  clean();
-}
-
-
-void wave2(){
-
-  //chaque ARRETE s'allume s'éteint successivement de derriere vers  devant
-  un_a();            
-  un_b();
-  delay(100);
-  clean();
-  deux_a();
-  deux_b();
-  delay(100);
-  clean();
-  trois_a();
-  trois_b();
-  delay(100);
-  clean();
-  quattre_a();
-  quattre_b();
-  delay(100);
-  clean();
-  cinq_a();
-  cinq_b();
-  delay(100);
-  clean();
-  six_a();
-  six_b();
-  delay(100);
-  clean();
-}
-
-void waveLightClean(){
-  //chaque arrete s'allume successivement de derriere vers devant et s'éteint successivement
-  un_a();            
-  un_b();
-  delay(50);
-  deux_a();
-  deux_b();
-  delay(50);
-  trois_a();
-  trois_b();
-  delay(50);
-  quattre_a();
-  quattre_b();
-  delay(50);
-  cinq_a();
-  cinq_b();
-  delay(50);
-  six_a();
-  six_b();
-  delay(50);
-  eteindre_un_a();            
-  eteindre_un_b();
-  delay(50);
-  eteindre_deux_a();
-  eteindre_deux_b();
-  delay(50);
-  eteindre_trois_a();
-  eteindre_trois_b();
-  delay(50);
-  eteindre_quattre_a();
-  eteindre_quattre_b();
-  delay(50);
-  eteindre_cinq_a();
-  eteindre_cinq_b();
-  delay(50);
-  eteindre_six_a();
-  eteindre_six_b();
-  delay(50);
-}
-
-void questionReponse(){
-
-  //pilier fond gauche s'allume et s'eteind, pilier fond droite répond droite répond 0.05s plus tard
-  un_a();            
-  deux_a();
-  delay(50);
-  eteindre_un_a();            
-  eteindre_deux_a();
-  un_b();
-  deux_b();
-  delay(50);
-  eteindre_un_b();
-  eteindre_deux_b();
-  delay(50);
-
-  //pilier milieu gauche s'allume et s'eteind, pilier milieu droite répond droite répond 0.05s plus tard
-  trois_a();
-  quattre_a();
-  delay(50);
-  eteindre_trois_a();
-  eteindre_quattre_a();
-  trois_b();
-  quattre_b();
-  delay(50);
-  eteindre_trois_b();
-  eteindre_quattre_b();
-  delay(50);
-
-  //pilier devant gauche s'allume et s'eteind, pilier devant droite répond droite répond 0.05s plus tard
-  cinq_a();
-  six_a();
-  delay(50);
-  eteindre_cinq_a();
-  eteindre_six_a();
-  cinq_b();
-  six_b();
-  delay(50);
-  eteindre_cinq_b();
-  eteindre_six_b();
-  delay(50);
-}
-
-void circle(){
-  un_a();
-  delay(50);
-  clean();            
-  deux_a();
-  delay(50);
-  clean();
-  trois_a();
-  delay(50);
-  clean();
-  quattre_a();
-  delay(50);
-  clean();
-  cinq_a();
-  delay(50);
-  clean();
-  six_a();
-  delay(50);
-  clean();
-  six_b();
-  delay(50);
-  clean();
-  cinq_b();
-  delay(50);
-  clean();
-  quattre_b();
-  delay(50);
-  clean();
-  trois_b();
-  delay(50);
-  clean();
-  deux_b();
-  delay(50);
-  clean();
-  un_b();
-  delay(50);
-  clean();
-  strip.show();
-}
-
-
-void rain(){
-  for(uint16_t i = 0;i<7*N;i++){
-    if (i%N == 0){
-      rainWipe(i, N);
-      rainWipe(i+(6*N), N+(6*N));
-      delay(1000);
-    }
-  }
-  strip.show();
-}
-
-void rainWipe(uint16_t i, uint16_t N) {
-  for (i; i < i+N; i++) {
-    strip.setPixelColor(i, strip.Color(100,100,100));
-    strip.show();
-    delay(50);
-  }
-}
-
-void rain2(){
-  for(int i=0;i<7;i++){
-    rainWipeGauche(i);
-    rainWipeDroite(i);
-    delay(1000);
-  }
-}
-
-void rainWipeGauche(int i) {
-  for (uint16_t j = i*N; j < (i+1)*N; j++) {
-    strip.setPixelColor(j, strip.Color(100,100,100));
-    strip.show();
-    delay(50);
-  }
-}
-
-void rainWipeDroite(int i) {
-  for (uint16_t j = 6*N+(2*i)*N; j < (2*i+1)*N; j++) {
-    strip.setPixelColor(j, strip.Color(100,100,100));
-    strip.show();
-    delay(50);
-  }
-}
 
   
 

@@ -30,9 +30,13 @@ void draw() {
 
 void oscEvent(OscMessage theOscMessage) {
   
+  
   println("### received an osc message. with address pattern "+
           theOscMessage.addrPattern()+" typetag "+ theOscMessage.typetag());
 
+
+  // pushPad
+  
   if(theOscMessage.checkAddrPattern("/2/push1")==true) {
     if(theOscMessage.checkTypetag("f")) {
       myPort.write(1);
@@ -60,7 +64,6 @@ void oscEvent(OscMessage theOscMessage) {
     }
   }
   
-  
   if(theOscMessage.checkAddrPattern("/2/push4")==true) {
     if(theOscMessage.checkTypetag("f")) {
       myPort.write(4);
@@ -69,8 +72,7 @@ void oscEvent(OscMessage theOscMessage) {
       return;
     }
   }
-  
-  
+    
   if(theOscMessage.checkAddrPattern("/2/push5")==true) {
     if(theOscMessage.checkTypetag("f")) {
       myPort.write(5);
@@ -80,7 +82,7 @@ void oscEvent(OscMessage theOscMessage) {
     }
   }
   
-    if(theOscMessage.checkAddrPattern("/2/push6")==true) {
+  if(theOscMessage.checkAddrPattern("/2/push6")==true) {
     if(theOscMessage.checkTypetag("f")) {
       myPort.write(6);
       println("TEST: 3 _ "  + theOscMessage.get(0).floatValue());
@@ -89,13 +91,55 @@ void oscEvent(OscMessage theOscMessage) {
     }
   }
   
+  if(theOscMessage.checkAddrPattern("/2/push7")==true) {
+    if(theOscMessage.checkTypetag("f")) {
+      myPort.write(7);
+      println("TEST: 3 _ "  + theOscMessage.get(0).floatValue());
+      myPort.write("\n");
+      return;
+    }
+  }
   
-  if(theOscMessage.checkAddrPattern("/1/fader5")==true) {
+  if(theOscMessage.checkAddrPattern("/2/push8")==true) {
+    if(theOscMessage.checkTypetag("f")) {
+      myPort.write(8);
+      println("TEST: 3 _ "  + theOscMessage.get(0).floatValue());
+      myPort.write("\n");
+      return;
+    }
+  }
+  
+  if(theOscMessage.checkAddrPattern("/2/push9")==true) {
     if(theOscMessage.checkTypetag("f")) {
       myPort.write(9);
-      int a = int(theOscMessage.get(0).floatValue()*100);
-      println("TEST: 5 _ "  + a);
-      myPort.write(  a );
+      println("TEST: 3 _ "  + theOscMessage.get(0).floatValue());
+      myPort.write("\n");
+      return;
+    }
+  }
+  
+  if(theOscMessage.checkAddrPattern("/2/push10")==true) {
+    if(theOscMessage.checkTypetag("f")) {
+      myPort.write(10);
+      println("TEST: 3 _ "  + theOscMessage.get(0).floatValue());
+      myPort.write("\n");
+      return;
+    }
+  }
+  
+  if(theOscMessage.checkAddrPattern("/2/push11")==true) {
+    if(theOscMessage.checkTypetag("f")) {
+      myPort.write(11);
+      println("TEST: 3 _ "  + theOscMessage.get(0).floatValue());
+      myPort.write("\n");
+      return;
+    }
+  }
+  
+   if(theOscMessage.checkAddrPattern("/2/push12")==true) {
+    if(theOscMessage.checkTypetag("f")) {
+      myPort.write(12);
+      println("TEST: 3 _ "  + theOscMessage.get(0).floatValue());
       myPort.write("\n");
       return;
     }
@@ -137,6 +181,17 @@ void oscEvent(OscMessage theOscMessage) {
     }
   }
   
+  // Fader
+    if(theOscMessage.checkAddrPattern("/1/fader5")==true) {
+    if(theOscMessage.checkTypetag("f")) {
+      myPort.write(9);
+      int a = int(theOscMessage.get(0).floatValue()*100);
+      println("TEST: 5 _ "  + a);
+      myPort.write(  a );
+      myPort.write("\n");
+      return;
+    }
+  }
   
   /*test multilog*/
     if(theOscMessage.checkAddrPattern("/4/multitoggle/1/1")==true) {
